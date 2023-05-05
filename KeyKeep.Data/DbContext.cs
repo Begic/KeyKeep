@@ -1,7 +1,6 @@
-﻿namespace KeyKeep.Data
-{
-    public class DbContext
-    {
+﻿namespace KeyKeep.Data;
 
-    }
+public class DbContext
+{
+
 }
