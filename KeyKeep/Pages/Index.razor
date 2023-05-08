@@ -1,10 +1,27 @@
 ﻿@page "/"
+@using System.ComponentModel
+@inject IDataProvider DataProvider
 
 <PageTitle>Übersicht</PageTitle>
 
 <h1>Dies ist eine Übersicht</h1>
 
+
+
+
+
+
+
+
 @code
 {
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+    }
 
+    private async Task Refresh()
+    {
+        await DataProvider.GetUseres();
+    }
 }
