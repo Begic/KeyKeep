@@ -8,6 +8,10 @@ public class DataBaseContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Password> Passwords { get; set; }
 
+    public DataBaseContext(DbContextOptions<DataBaseContext> options) : base(options)
+    {
+        
+    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
