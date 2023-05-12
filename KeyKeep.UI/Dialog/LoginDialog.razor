@@ -1,4 +1,6 @@
-﻿<MudDialog>
+﻿@using KeyKeep.Data.Models
+
+<MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">
             <MudIcon Icon="@Icons.Material.Filled.Lock" Class="mr-3 mb-n1" />
@@ -6,20 +8,28 @@
         </MudText>
     </TitleContent>
     <DialogContent>
-        
-        
-
+        <EditForm Model="LoginInfo" OnValidSubmit="OnClickLogin">
+            <MudGrid>
+                <MudItem lg="12">
+                    <MudTextField Label="E-Mail" T="string" @bind-Text="LoginInfo.Email"/>
+                </MudItem>
+                <MudItem lg="12">
+                    <MudTextField Label="Passwort" T="string" @bind-Text="LoginInfo.Password" />
+                </MudItem>
+            </MudGrid>
+        </EditForm>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Info" OnClick="@OnClickRegister">Registrieren</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@OnClickRegister">Registrieren</MudButton>
 
-        <MudButton Color="Color.Success" OnClick="OnClickLogin">Anmelden</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" ButtonType="ButtonType.Submit" >Anmelden</MudButton>
     </DialogActions>
 </MudDialog>
 
 
 @code
 {
+    public LoginInfo LoginInfo { get; set; } = new LoginInfo();
 
     private void OnClickRegister()
     {

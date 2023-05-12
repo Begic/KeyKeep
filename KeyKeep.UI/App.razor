@@ -2,20 +2,20 @@
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
 
-<MudDialogProvider />
+
 
 <Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        
+
         @if (true)
         {
 
         }
 
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
-        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
-        
-        
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+
+
 
     </Found>
     <NotFound>
@@ -28,17 +28,19 @@
 
 @code
 {
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var options = new DialogOptions
-            {
-                DisableBackdropClick = true,
-                CloseButton = false,
-                CloseOnEscapeKey = false,
-                FullScreen = true,
-            };
+        if (firstRender)
+        {
+            var options = new DialogOptions
+                {
+                    DisableBackdropClick = true,
+                    CloseButton = false,
+                    CloseOnEscapeKey = false,
+                };
 
-        var dialog = await DialogService.ShowAsync<LoginDialog>("Login", options);
-        var result = await dialog.Result;
+            var dialog = await DialogService.ShowAsync<LoginDialog>("Login", options);
+            var result = await dialog.Result;
+        }
     }
 }
