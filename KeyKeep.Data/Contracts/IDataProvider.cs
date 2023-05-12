@@ -2,5 +2,7 @@
 
 public interface IDataProvider
 {
-    Task GetUseres();
+    Task GetPasswords();
+    Task AddUser();
+    Task GetUser();
 }

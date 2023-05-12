@@ -1,12 +1,14 @@
 ﻿@page "/"
+@using KeyKeep.UI.Dialog
 @inject IDataProvider DataProvider
+@inject IDialogService DialogService
+
 
 <PageTitle>Übersicht</PageTitle>
 
 
 
-
-
+<MudButton OnClick="Tuwas">Drüüück</MudButton>
 
 
 @code
@@ -18,6 +20,20 @@
 
     private async Task Refresh()
     {
-        await DataProvider.GetUseres();
+       
+    }
+
+    private async Task Tuwas()
+    {
+        var options = new DialogOptions
+        {
+            DisableBackdropClick = true,
+            CloseButton = false,
+            CloseOnEscapeKey = false,
+            FullScreen = true,
+        };
+
+        var dialog = await DialogService.ShowAsync<LoginDialog>();
+        var result = await dialog.Result;
     }
 }

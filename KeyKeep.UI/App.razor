@@ -1,7 +1,22 @@
-﻿<Router AppAssembly="@typeof(App).Assembly">
+﻿@using KeyKeep.UI.Dialog
+@inject IDataProvider DataProvider
+@inject IDialogService DialogService
+
+<MudDialogProvider />
+
+<Router AppAssembly="@typeof(App).Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        
+        @if (true)
+        {
+
+        }
+
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+        
+        
+
     </Found>
     <NotFound>
         <PageTitle>Not found</PageTitle>
@@ -11,10 +26,19 @@
     </NotFound>
 </Router>
 
-
 @code
 {
+    protected override async Task OnInitializedAsync()
+    {
+        var options = new DialogOptions
+            {
+                DisableBackdropClick = true,
+                CloseButton = false,
+                CloseOnEscapeKey = false,
+                FullScreen = true,
+            };
 
-
-
+        var dialog = await DialogService.ShowAsync<LoginDialog>("Login", options);
+        var result = await dialog.Result;
+    }
 }
