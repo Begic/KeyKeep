@@ -1,0 +1,19 @@
+﻿
+<div class="singlePageLayout">
+    @ChildContent
+</div>
+
+<style>
+    .singlePageLayout {
+        margin: auto;
+        max-width: 800px;
+        padding: 20px;
+    }
+</style>
+
+
+@code
+{
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

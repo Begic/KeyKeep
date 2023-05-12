@@ -18,11 +18,12 @@
 }
 else
 {
-    <LoginPage @bind-IsLoggedIn="isLoggedIn"/>
+    <SinglePageLayout>
+        <LoginPage @bind-IsLoggedIn="isLoggedIn" />
+    </SinglePageLayout>
 }
-
 
 @code
 {
-    private bool isLoggedIn = false;
+    private bool isLoggedIn = true;
 }

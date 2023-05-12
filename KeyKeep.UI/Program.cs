@@ -13,6 +13,7 @@ builder.Services.AddMudServices();
 
 builder.Services.AddDbContextFactory<DataBaseContext>(options =>
     options.UseSqlite(@"DataSource=MyDataBase.db;"));
+
 builder.Services.AddTransient<IDataProvider, DataProvider>();
 
 
