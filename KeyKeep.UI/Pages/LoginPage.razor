@@ -1,0 +1,28 @@
+﻿@inject IDataProvider DataProvider
+
+<MudGrid>
+    <MudItem>
+        <MudTextField Label="@nameof(Email)" T="string" @bind-Text="@Email" />
+    </MudItem>
+    <MudItem>
+        <MudTextField Label="@nameof(Password)" T="string" @bind-Text="@Password" />
+    </MudItem>
+    <MudButton Variant="Variant.Filled" Color="Color.Info">Registrieren</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Login" >Anmelden</MudButton>
+</MudGrid>
+@code
+{
+    [Parameter]
+    public bool IsLoggedIn { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsLoggedInChanged { get; set; }
+
+    public string Password { get; set; }
+    public string Email { get; set; }
+
+    private async Task Login()
+    {
+        await IsLoggedInChanged.InvokeAsync(await DataProvider.CheckUserForLogin(Email, Password));
+    }
+}

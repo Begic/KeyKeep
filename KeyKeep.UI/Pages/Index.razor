@@ -8,9 +8,6 @@
 
 
 
-<MudButton Variant="Variant.Filled" OnClick="Tuwas">Drüüück</MudButton>
-
-
 @code
 {
     protected override async Task OnInitializedAsync()
@@ -21,19 +18,5 @@
     private async Task Refresh()
     {
        
-    }
-
-    private async Task Tuwas()
-    {
-        var options = new DialogOptions
-        {
-            DisableBackdropClick = true,
-            CloseButton = false,
-            CloseOnEscapeKey = false,
-            FullScreen = true,
-        };
-
-        var dialog = await DialogService.ShowAsync<LoginDialog>();
-        var result = await dialog.Result;
     }
 }

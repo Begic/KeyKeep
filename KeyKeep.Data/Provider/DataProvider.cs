@@ -30,16 +30,10 @@ public class DataProvider : IDataProvider
         await db.SaveChangesAsync();
     }
 
-    public async Task GetPasswords()
-    {
-        await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
-    }
-
-    public async Task GetUser()
+    public async Task<bool> CheckUserForLogin(string email, string password)
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        var user = await db.Users.ToListAsync();
-
+        return db.Users.Any(x => x.Email == email && x.LoginPassword == password);
     }
 }

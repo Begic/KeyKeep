@@ -2,7 +2,5 @@
 
 public interface IDataProvider
 {
-    Task GetPasswords();
-    Task AddUser();
-    Task GetUser();
+    Task<bool> CheckUserForLogin(string email, string password);
 }

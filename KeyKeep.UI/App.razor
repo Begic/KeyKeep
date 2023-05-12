@@ -1,46 +1,28 @@
 ﻿@inject IDataProvider DataProvider
 @inject IDialogService DialogService
 
-
-<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-
-        @if (canlogin)
-        {
+@if (isLoggedIn)
+{
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
             <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
             <FocusOnNavigate RouteData="@routeData" Selector="h1" />
-        }
-        else
-        {
-            // Er soll iwas anzeigen
-        }
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+}
+else
+{
+    <LoginPage @bind-IsLoggedIn="isLoggedIn"/>
+}
 
-    </Found>
-    <NotFound>
-        <PageTitle>Not found</PageTitle>
-        <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
 
 @code
 {
-    private bool canlogin;
-
-    protected override async Task OnInitializedAsync()
-    {
-        //Dialog sollt aufgeh i gib daten ein und bekomm bool zurück
-        var options = new DialogOptions
-            {
-                DisableBackdropClick = true,
-                CloseButton = false,
-                CloseOnEscapeKey = false,
-            };
-
-        var dialog = await DialogService.ShowAsync<LoginDialog>("Login", options);
-        var result = await dialog.Result;
-
-        canlogin = (bool)result.Data;
-    }
+    private bool isLoggedIn = false;
 }
