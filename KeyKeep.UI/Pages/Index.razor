@@ -1,17 +1,25 @@
 ﻿@page "/"
+@using KeyKeep.Data.Entities
 
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
 
-
 <PageTitle>Übersicht</PageTitle>
 
+<LoadingPage IsLoading="allPasswordInfos == null">
+    <MudDataGrid Items="@Data">
 
-
+    </MudDataGrid>
+</LoadingPage>
 
 
 @code
 {
+    [Parameter]
+    public int UserId { get; set; }
+
+    private List<PasswordInfo> allPasswordInfos;
+
     protected override async Task OnInitializedAsync()
     {
         await Refresh();
@@ -19,6 +27,7 @@
 
     private async Task Refresh()
     {
-       
+        allPasswordInfos = await DataProvider.GetPasswordsFromUser(1) ?? new List<PasswordInfo>();
+
     }
 }
