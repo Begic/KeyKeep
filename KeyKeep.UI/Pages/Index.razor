@@ -1,17 +1,46 @@
 ﻿@page "/"
-@using KeyKeep.Data.Entities
-
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
 
 <PageTitle>Übersicht</PageTitle>
 
 <LoadingPage IsLoading="allPasswordInfos == null">
-    <MudDataGrid Items="@Data">
 
-    </MudDataGrid>
+    <DefaultLayout>
+        <Actions>
+            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="OnClickHinzufügen" EndIcon="@Icons.Material.Filled.Save">Hinzufügen</MudButton>
+        </Actions>
+        <Content>
+            @if (allPasswordInfos.Count != 0)
+            {
+                <MudDataGrid Items="@allPasswordInfos"
+                             T="PasswordInfo"
+                             Dense="true"
+                             Striped="true"
+                             Virtualize="true"
+                             Hover="true">
+                    <PropertyColumn Property="x => x.Title"/>
+                    <PropertyColumn Property="x => x.Description"/>
+                    <PropertyColumn Property="x => x.URL"/>
+                    <PropertyColumn Property="x => x.UserName"/>
+                    <PropertyColumn Property="x => x.UserPassword"/>
+                    <TemplateColumn>
+                        <CellTemplate>
+                            <MudStack Row>
+                                <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)"/>
+                                <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete"/>
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </MudDataGrid>
+            }
+            else
+            {
+                <MudText Style="text-align: center" Typo="Typo.h3">Keine Daten..</MudText>
+            }
+        </Content>
+    </DefaultLayout>
 </LoadingPage>
-
 
 @code
 {
@@ -19,6 +48,8 @@
     public int UserId { get; set; }
 
     private List<PasswordInfo> allPasswordInfos;
+
+    private PasswordInfo selectedPasswordInfo;
 
     protected override async Task OnInitializedAsync()
     {
@@ -28,6 +59,18 @@
     private async Task Refresh()
     {
         allPasswordInfos = await DataProvider.GetPasswordsFromUser(1) ?? new List<PasswordInfo>();
+    }
 
+    private async Task OnClickHinzufügen()
+    {
+    }
+
+    private async Task OnClickEdit(PasswordInfo item)
+    {
+    }
+
+    private void OnClickEdit(PasswordInfo item)
+    {
+        
     }
 }
