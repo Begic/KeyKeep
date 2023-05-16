@@ -1,6 +1,7 @@
 ﻿@page "/"
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <PageTitle>Übersicht</PageTitle>
 
@@ -8,7 +9,7 @@
 
     <DefaultLayout>
         <Actions>
-            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="OnClickHinzufügen" EndIcon="@Icons.Material.Filled.Save">Hinzufügen</MudButton>
+            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="OnClickAdd" EndIcon="@Icons.Material.Filled.Save">Hinzufügen</MudButton>
         </Actions>
         <Content>
             @if (allPasswordInfos.Count != 0)
@@ -28,7 +29,7 @@
                         <CellTemplate>
                             <MudStack Row>
                                 <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)"/>
-                                <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete"/>
+                            <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
                             </MudStack>
                         </CellTemplate>
                     </TemplateColumn>
@@ -61,15 +62,30 @@
         allPasswordInfos = await DataProvider.GetPasswordsFromUser(1) ?? new List<PasswordInfo>();
     }
 
-    private async Task OnClickHinzufügen()
+    private async Task OnClickAdd()
     {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true
+        };
+
+        var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", options);
+        var ka = dialogResult.Result;
+
     }
 
     private async Task OnClickEdit(PasswordInfo item)
     {
+        var options = new DialogOptions
+        {
+            CloseOnEscapeKey = true
+        };
+
+        var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", options);
+        var ka = dialogResult.Result;
     }
 
-    private void OnClickEdit(PasswordInfo item)
+    private async Task OnClickDelete(PasswordInfo item)
     {
         
     }
