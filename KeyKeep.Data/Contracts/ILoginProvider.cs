@@ -1,6 +1,8 @@
-﻿namespace KeyKeep.Data.Contracts;
+﻿using KeyKeep.Data.Models;
+
+namespace KeyKeep.Data.Contracts;
 
 public interface ILoginProvider
 {
-    Task<string?> CheckUserForLogin(string email, string password);
+    Task<LoginInfo?> CheckUserForLogin(string email, string password);
 }
