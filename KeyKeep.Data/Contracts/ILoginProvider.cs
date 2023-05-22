@@ -2,4 +2,5 @@
 
 public interface ILoginProvider
 {
+    Task<string?> CheckUserForLogin(string email, string password);
 }

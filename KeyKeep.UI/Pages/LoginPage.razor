@@ -3,10 +3,10 @@
 <DefaultLayout>
     <MudGrid>
         <MudItem>
-            <MudTextField Label="E-Mail" T="string" @bind-Text="@Email"/>
+            <MudTextField Label="E-Mail" T="string" @bind-Text="@Email" />
         </MudItem>
         <MudItem>
-            <MudTextField Label="Paswort" T="string" @bind-Text="@Password"/>
+            <MudTextField Label="Paswort" T="string" @bind-Text="@Password" />
         </MudItem>
         <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OnClickRegister">Registrieren</MudButton>
         <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="OnClickTryLogin">Anmelden</MudButton>
@@ -16,23 +16,32 @@
 @code
 {
     [Parameter]
-    public bool IsLoggedIn { get; set; }
+    public bool CanLogin { get; set; }
 
     [Parameter]
-    public EventCallback<bool> IsLoggedInChanged { get; set; }
+    public EventCallback<bool> CanLoginChanged { get; set; }
 
     public string Password { get; set; }
     public string Email { get; set; }
 
     private async Task OnClickTryLogin()
     {
-        var canlogin = await LoginProvider.CheckUserForLogin(Email, Password)
+        var loginUser = await LoginProvider.CheckUserForLogin(Email, Password);
 
-    await IsLoggedInChanged.InvokeAsync();
+        if (loginUser != null)
+        {
+            
+        }
+        else
+        {
+
+        }
+
+        await CanLoginChanged.InvokeAsync();
     }
 
     private async Task OnClickRegister()
     {
-        
+
     }
 }

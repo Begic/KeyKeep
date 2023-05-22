@@ -5,7 +5,7 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-@if (isLoggedIn)
+@if (canLogin)
 {
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
@@ -22,10 +22,10 @@
 }
 else
 {
-    <LoginPage @bind-IsLoggedIn="isLoggedIn" />
+    <LoginPage @bind-CanLogin="canLogin" />
 }
 
 @code
 {
-    private bool isLoggedIn = false;
+    private bool canLogin = false;
 }
