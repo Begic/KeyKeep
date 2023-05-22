@@ -1,15 +1,18 @@
-﻿@inject IDataProvider DataProvider
+﻿@inject ILoginProvider LoginProvider
 
-<MudGrid>
-    <MudItem>
-        <MudTextField Label="@nameof(Email)" T="string" @bind-Text="@Email" />
-    </MudItem>
-    <MudItem>
-        <MudTextField Label="@nameof(Password)" T="string" @bind-Text="@Password" />
-    </MudItem>
-    <MudButton Variant="Variant.Filled" Color="Color.Info">Registrieren</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="Login" >Anmelden</MudButton>
-</MudGrid>
+<DefaultLayout>
+    <MudGrid>
+        <MudItem>
+            <MudTextField Label="E-Mail" T="string" @bind-Text="@Email"/>
+        </MudItem>
+        <MudItem>
+            <MudTextField Label="Paswort" T="string" @bind-Text="@Password"/>
+        </MudItem>
+        <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OnClickRegister">Registrieren</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="OnClickTryLogin">Anmelden</MudButton>
+    </MudGrid>
+</DefaultLayout>
+
 @code
 {
     [Parameter]
@@ -21,8 +24,15 @@
     public string Password { get; set; }
     public string Email { get; set; }
 
-    private async Task Login()
+    private async Task OnClickTryLogin()
     {
-        await IsLoggedInChanged.InvokeAsync(await DataProvider.CheckUserForLogin(Email, Password));
+        var canlogin = await LoginProvider.CheckUserForLogin(Email, Password)
+
+    await IsLoggedInChanged.InvokeAsync();
+    }
+
+    private async Task OnClickRegister()
+    {
+        
     }
 }

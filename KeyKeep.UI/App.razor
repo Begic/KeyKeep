@@ -1,6 +1,10 @@
 ﻿@inject IDataProvider DataProvider
 @inject IDialogService DialogService
 
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
 @if (isLoggedIn)
 {
     <Router AppAssembly="@typeof(App).Assembly">
@@ -18,12 +22,10 @@
 }
 else
 {
-    <SinglePageLayout>
-        <LoginPage @bind-IsLoggedIn="isLoggedIn" />
-    </SinglePageLayout>
+    <LoginPage @bind-IsLoggedIn="isLoggedIn" />
 }
 
 @code
 {
-    private bool isLoggedIn = true;
+    private bool isLoggedIn = false;
 }

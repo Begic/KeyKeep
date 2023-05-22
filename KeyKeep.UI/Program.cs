@@ -15,7 +15,7 @@ builder.Services.AddDbContextFactory<DataBaseContext>(options =>
     options.UseSqlite(@"DataSource=MyDataBase.db;"));
 
 builder.Services.AddTransient<IDataProvider, DataProvider>();
-
+builder.Services.AddTransient<ILoginProvider, LoginProvider>();
 
 var app = builder.Build();
 
