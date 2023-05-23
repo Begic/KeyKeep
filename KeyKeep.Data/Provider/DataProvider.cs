@@ -1,5 +1,4 @@
 ﻿using KeyKeep.Data.Contracts;
-using KeyKeep.Data.Entities;
 using KeyKeep.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,24 +12,7 @@ public class DataProvider : IDataProvider
     {
         this.factory = factory;
     }
-
-    public async Task AddUser()
-    {
-        await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
-
-        var ka = db.Users;
-
-        await db.Users.AddAsync(new User
-        {
-            FirstName = "Admin",
-            LastName = "User",
-            Email = "admin@user.at",
-            LoginPassword = "admin123"
-        });
-
-        await db.SaveChangesAsync();
-    }
-
+    
     public async Task<List<PasswordInfo>> GetPasswordsFromUser(int userId)
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);

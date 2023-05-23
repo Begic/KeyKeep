@@ -1,16 +1,20 @@
 ﻿@inject ILoginProvider LoginProvider
+@inject UserService UserService
+@inject ISnackbar Toaster
 
 <DefaultLayout>
-    <MudGrid>
-        <MudItem>
-            <MudTextField Label="E-Mail" T="string" @bind-Text="@Email" />
-        </MudItem>
-        <MudItem>
-            <MudTextField Label="Paswort" T="string" @bind-Text="@Password" />
-        </MudItem>
-        <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="OnClickRegister">Registrieren</MudButton>
-        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="OnClickTryLogin">Anmelden</MudButton>
-    </MudGrid>
+    <Content>
+        <MudGrid>
+            <MudItem xs="3"></MudItem>
+            <MudItem xs="6">
+                <MudTextField Label="E-Mail" @bind-Value="@Email"/>
+                <MudTextField Label="Passwort" @bind-Value="@Password"/>
+                <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Info" OnClick="OnClickRegister">Registrieren</MudButton>
+                <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Success" OnClick="OnClickTryLogin">Anmelden</MudButton>
+            </MudItem>
+            <MudItem xs="3"></MudItem>
+        </MudGrid>
+    </Content>
 </DefaultLayout>
 
 @code
@@ -30,18 +34,22 @@
 
         if (loginUser != null)
         {
-            
+            CanLogin = true;
+            UserService.CurrentUser = loginUser;
+            Toaster.Add("Login erfolgreich", Severity.Success);
         }
         else
         {
-
+            CanLogin = false;
+            UserService.CurrentUser = null;
+            Toaster.Add("Login fehlerhaft", Severity.Error);
         }
 
-        await CanLoginChanged.InvokeAsync();
+        await CanLoginChanged.InvokeAsync(CanLogin);
     }
 
     private async Task OnClickRegister()
     {
-
+        // TODO
     }
 }
