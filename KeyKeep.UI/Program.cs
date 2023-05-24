@@ -1,5 +1,6 @@
 using KeyKeep.Data;
 using KeyKeep.Data.Contracts;
+using KeyKeep.Data.Entities;
 using KeyKeep.Data.Provider;
 using KeyKeep.Data.Services;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +26,18 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
 {
     db.Database.Migrate();
 
+    if (!db.Users.Any())
+    {
+        await db.Users.AddAsync(new User
+        {
+            FirstName = "Admin",
+            LastName = "User",
+            Email = "admin@user.at",
+            LoginPassword = "admin123"
+        });
 
+        await db.SaveChangesAsync();
+    }
 }
 
 if (!app.Environment.IsDevelopment())
