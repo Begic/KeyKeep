@@ -14,6 +14,7 @@ builder.Services.AddMudServices();
 
 builder.Services.AddTransient<IDataProvider, DataProvider>();
 builder.Services.AddTransient<ILoginProvider, LoginProvider>();
+builder.Services.AddTransient<IRegisterProvider, RegisterProvider>();
 builder.Services.AddScoped<UserService>();
 
 builder.Services.AddDbContextFactory<DataBaseContext>(options =>

@@ -1,4 +1,7 @@
-﻿<EditForm Model="@PasswordInfoToEdit" OnValidSubmit="@Save">
+﻿@inject IRegisterProvider RegisterProvider
+@inject ISnackbar Toaster
+
+<EditForm Model="@RegisterInfoToEdit" OnValidSubmit="@OnClickRegister">
     <MudDialog>
         <DialogContent>
             <MudGrid>
@@ -18,8 +21,8 @@
         </DialogContent>
         <DialogActions>
 
-            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save">Abbrechen</MudButton>
-            <MudButton Color="Color.Success" ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save">Registrieren</MudButton>
+            <MudButton Color="Color.Error" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Cancel" OnClick="@OnClickCancel">Abbrechen</MudButton>
+            <MudButton Color="Color.Success" ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
 
         </DialogActions>
     </MudDialog>
@@ -27,9 +30,15 @@
 
 @code
 {
-    public PasswordInfo PasswordInfoToEdit { get; set; } = new();
+    public RegisterInfo RegisterInfoToEdit { get; set; } = new();
 
-    private async Task Save()
+    private async Task OnClickRegister()
     {
+        
+    }
+
+    private async Task OnClickCancel()
+    {
+        
     }
 }
