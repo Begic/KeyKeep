@@ -6,16 +6,16 @@
 
 <PageTitle>Login</PageTitle>
 
-<MudPaper Style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 600px">
+<MudPaper Style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 650px">
     <DefaultLayout>
         <Content>
             <MudGrid>
                 <MudItem xs="3" />
                 <MudItem xs="6">
-                    <MudTextField Label="E-Mail" @bind-Value="@Email" />
-                    <MudTextField Label="Passwort" @bind-Value="@Password" />
-                    <Divider/>
-                    <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Success" OnClick="OnClickTryLogin" EndIcon="@Icons.Material.Filled.Login">Anmelden</MudButton>
+                    <MudTextField @bind-Value="@Email" Label="E-Mail" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="Password" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
+                    <Divider Margin="16px"/>
+                    <MudButton Class="mb-2" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" OnClick="OnClickTryLogin" EndIcon="@Icons.Material.Filled.Login">Anmelden</MudButton>
                     <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="OnClickRegister" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
                 </MudItem>
                 <MudItem xs="3" />
@@ -36,6 +36,10 @@
 
     public string Password { get; set; }
     public string Email { get; set; }
+
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private bool isShow;
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,5 +83,20 @@
             });
 
         await Refresh();
+    }
+
+    private void OnClickShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
     }
 }
