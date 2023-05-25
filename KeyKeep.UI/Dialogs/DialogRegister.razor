@@ -6,39 +6,63 @@
         <DialogContent>
             <MudGrid>
                 <MudItem md="12">
-
+                    <MudTextField @bind-Value="@RegisterInfoToEdit.FirstName" Label="Vorname" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem md="12">
-
+                    <MudTextField @bind-Value="@RegisterInfoToEdit.LastName" Label="Nachname" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem md="12">
-
+                    <MudTextField @bind-Value="@RegisterInfoToEdit.Email" InputType="InputType.Email" Label="E-Mail" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem md="12">
-
+                    <MudTextField @bind-Value="RegisterInfoToEdit.LoginPassword" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
                 </MudItem>
             </MudGrid>
         </DialogContent>
         <DialogActions>
-
             <MudButton Color="Color.Error" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Cancel" OnClick="@OnClickCancel">Abbrechen</MudButton>
             <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
-
         </DialogActions>
     </MudDialog>
 </EditForm>
 
 @code
 {
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
     public RegisterInfo RegisterInfoToEdit { get; set; } = new();
+
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+    private bool isShow;
 
     private async Task OnClickRegister()
     {
-        
+        await RegisterProvider.AddUser(RegisterInfoToEdit);
+        MudDialog.Close();
+        Toaster.Add("Ergolfreich registriert", Severity.Success);
     }
 
     private async Task OnClickCancel()
     {
-        
+        Toaster.Add("Abgebrochen", Severity.Success);
+        MudDialog.Cancel();
+    }
+
+    private void OnClickShowPassword()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
     }
 }

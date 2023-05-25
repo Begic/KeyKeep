@@ -74,12 +74,11 @@
 
     private async Task OnClickRegister()
     {
-        await DialogService.ShowAsync<DialogRegister>("Registrieren", new DialogOptions
+        await DialogService.ShowAsync<DialogRegister>("Registrieren Sie sich um fortzufahren", new DialogOptions
             {
                 Position = DialogPosition.Center,
                 DisableBackdropClick = true,
-                CloseButton = true,
-                MaxWidth = MaxWidth.Medium,
+                MaxWidth = MaxWidth.Small,
             });
 
         await Refresh();
