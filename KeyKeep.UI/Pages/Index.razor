@@ -1,7 +1,8 @@
 ﻿@page "/"
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
-@inject ISnackbar Snackbar
+@inject ISnackbar Toaster
+@inject UserService UserService
 
 <PageTitle>Übersicht</PageTitle>
 
@@ -45,9 +46,6 @@
 
 @code
 {
-    [Parameter]
-    public int UserId { get; set; }
-
     private List<PasswordInfo> allPasswordInfos;
 
     private PasswordInfo selectedPasswordInfo;
@@ -59,7 +57,7 @@
 
     private async Task Refresh()
     {
-        allPasswordInfos = await DataProvider.GetPasswordsFromUser(1) ?? new List<PasswordInfo>();
+        allPasswordInfos = await DataProvider.GetPasswordsFromUser(UserService.CurrentUser.Id) ?? new List<PasswordInfo>();
     }
 
     private async Task OnClickAdd()
@@ -71,7 +69,6 @@
 
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", options);
         var ka = dialogResult.Result;
-
     }
 
     private async Task OnClickEdit(PasswordInfo item)

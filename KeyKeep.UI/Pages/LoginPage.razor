@@ -12,7 +12,7 @@
             <MudGrid>
                 <MudItem xs="3" />
                 <MudItem xs="6">
-                    <MudTextField @bind-Value="@Email" Label="E-Mail" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="@Email" Label="E-Mail" Variant="Variant.Outlined" InputType="InputType.Email"/>
                     <MudTextField @bind-Value="Password" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
                     <Divider Margin="16px"/>
                     <MudButton Class="mb-2" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" OnClick="OnClickTryLogin" EndIcon="@Icons.Material.Filled.Login">Anmelden</MudButton>

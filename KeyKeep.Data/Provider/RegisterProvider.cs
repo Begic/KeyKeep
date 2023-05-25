@@ -1,4 +1,5 @@
 ﻿using KeyKeep.Data.Contracts;
+using KeyKeep.Data.Entities;
 using KeyKeep.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,9 +14,18 @@ public class RegisterProvider : IRegisterProvider
         this.factory = factory;
     }
 
-    public async Task AddUser(RegisterInfo registerInfoToEdit)
+    public async Task AddUser(RegisterInfo data)
     {
-        
+        await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
+        await db.Users.AddAsync(new User
+        {
+            FirstName = data.FirstName,
+            LastName = data.LastName,
+            Email = data.Email,
+            LoginPassword = data.LoginPassword
+        });
+
+        await db.SaveChangesAsync();
     }
 }
