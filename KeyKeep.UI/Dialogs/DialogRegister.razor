@@ -1,0 +1,35 @@
+﻿<EditForm Model="@PasswordInfoToEdit" OnValidSubmit="@Save">
+    <MudDialog>
+        <DialogContent>
+            <MudGrid>
+                <MudItem md="12">
+
+                </MudItem>
+                <MudItem md="12">
+
+                </MudItem>
+                <MudItem md="12">
+
+                </MudItem>
+                <MudItem md="12">
+
+                </MudItem>
+            </MudGrid>
+        </DialogContent>
+        <DialogActions>
+
+            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save">Abbrechen</MudButton>
+            <MudButton Color="Color.Success" ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Save">Registrieren</MudButton>
+
+        </DialogActions>
+    </MudDialog>
+</EditForm>
+
+@code
+{
+    public PasswordInfo PasswordInfoToEdit { get; set; } = new();
+
+    private async Task Save()
+    {
+    }
+}

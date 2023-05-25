@@ -1,6 +1,10 @@
 ﻿@inject ILoginProvider LoginProvider
 @inject UserService UserService
 @inject ISnackbar Toaster
+@inject NavigationManager NavigationManager
+@inject IDialogService DialogService
+
+<PageTitle>Login</PageTitle>
 
 <DefaultLayout>
     <Content>
@@ -28,6 +32,17 @@
     public string Password { get; set; }
     public string Email { get; set; }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+    }
+
+    private async Task Refresh()
+    {
+        Password = string.Empty;
+        Email = string.Empty;
+    }
+
     private async Task OnClickTryLogin()
     {
         var loginUser = await LoginProvider.CheckUserForLogin(Email, Password);
@@ -50,6 +65,15 @@
 
     private async Task OnClickRegister()
     {
-        // TODO
+        await DialogService.ShowAsync<DialogRegister>("Registrieren", new DialogOptions
+        {
+            Position = DialogPosition.Center,
+            DisableBackdropClick = true,
+            CloseButton = true,
+            MaxWidth = MaxWidth.Medium,
+
+        });
+        
+        await Refresh();
     }
 }
