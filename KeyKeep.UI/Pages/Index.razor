@@ -6,43 +6,40 @@
 
 <PageTitle>Übersicht</PageTitle>
 
-<LoadingPage IsLoading="allPasswordInfos == null">
-
-    <DefaultLayout>
-        <Actions>
-            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="@OnClickAdd" EndIcon="@Icons.Material.Filled.AddCircle">Hinzufügen</MudButton>
-        </Actions>
-        <Content>
-            @if (allPasswordInfos.Count != 0)
-            {
-                <MudDataGrid Items="@allPasswordInfos"
-                             T="PasswordInfo"
-                             Dense="true"
-                             Striped="true"
-                             Virtualize="true"
-                             Hover="true">
-                    <PropertyColumn Property="x => x.Title"/>
-                    <PropertyColumn Property="x => x.Description"/>
-                    <PropertyColumn Property="x => x.URL"/>
-                    <PropertyColumn Property="x => x.UserName"/>
-                    <PropertyColumn Property="x => x.UserPassword"/>
-                    <TemplateColumn>
-                        <CellTemplate>
-                            <MudStack Row>
-                                <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)"/>
-                            <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
-                            </MudStack>
-                        </CellTemplate>
-                    </TemplateColumn>
-                </MudDataGrid>
-            }
-            else
-            {
-                <MudText Style="text-align: center" Typo="Typo.h3">Keine Daten..</MudText>
-            }
-        </Content>
-    </DefaultLayout>
-</LoadingPage>
+<DefaultLayout>
+    <Actions>
+        <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="@OnClickAdd" EndIcon="@Icons.Material.Filled.AddCircle">Hinzufügen</MudButton>
+    </Actions>
+    <Content>
+        @if (allPasswordInfos.Count != 0)
+        {
+            <MudDataGrid Items="@allPasswordInfos"
+                     T="PasswordInfo"
+                     Dense="true"
+                     Striped="true"
+                     Virtualize="true"
+                     Hover="true">
+                <PropertyColumn Property="x => x.Title" />
+                <PropertyColumn Property="x => x.Description" />
+                <PropertyColumn Property="x => x.URL" />
+                <PropertyColumn Property="x => x.UserName" />
+                <PropertyColumn Property="x => x.UserPassword" />
+                <TemplateColumn>
+                    <CellTemplate>
+                        <MudStack Row>
+                        <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)" />
+                        <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
+                    </MudStack>
+                </CellTemplate>
+            </TemplateColumn>
+        </MudDataGrid>
+        }
+        else
+        {
+            <MudText Style="text-align: center" Typo="Typo.h3">Keine Daten..</MudText>
+        }
+    </Content>
+</DefaultLayout>
 
 @code
 {
@@ -53,6 +50,8 @@
     protected override async Task OnInitializedAsync()
     {
         await Refresh();
+
+        StateHasChanged();
     }
 
     private async Task Refresh()
@@ -63,11 +62,11 @@
     private async Task OnClickAdd()
     {
         var options = new DialogOptions
-        {
-            Position = DialogPosition.Center,
-            DisableBackdropClick = true,
-            MaxWidth = MaxWidth.Small,
-        };
+            {
+                Position = DialogPosition.Center,
+                DisableBackdropClick = true,
+                MaxWidth = MaxWidth.Small,
+            };
 
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", options);
         var ka = dialogResult.Result;
@@ -76,9 +75,9 @@
     private async Task OnClickEdit(PasswordInfo item)
     {
         var options = new DialogOptions
-        {
-            CloseOnEscapeKey = true
-        };
+            {
+                CloseOnEscapeKey = true
+            };
 
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", new DialogParameters
         {
