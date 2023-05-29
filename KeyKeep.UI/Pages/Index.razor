@@ -10,7 +10,7 @@
 
     <DefaultLayout>
         <Actions>
-            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="OnClickAdd" EndIcon="@Icons.Material.Filled.AddCircle">Hinzufügen</MudButton>
+            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="@OnClickAdd" EndIcon="@Icons.Material.Filled.AddCircle">Hinzufügen</MudButton>
         </Actions>
         <Content>
             @if (allPasswordInfos.Count != 0)
@@ -64,7 +64,9 @@
     {
         var options = new DialogOptions
         {
-            CloseOnEscapeKey = true
+            Position = DialogPosition.Center,
+            DisableBackdropClick = true,
+            MaxWidth = MaxWidth.Small,
         };
 
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", options);
@@ -78,12 +80,20 @@
             CloseOnEscapeKey = true
         };
 
-        var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", options);
+        var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", new DialogParameters
+        {
+            {nameof(DialogAddPassword.PasswordId), item.Id},
+        }, options);
         var ka = dialogResult.Result;
     }
 
     private async Task OnClickDelete(PasswordInfo item)
     {
-        
+        if (item != null)
+        {
+            await DataProvider.DeletePassword(item);
+
+            Toaster.Add("Erfolgreich gelöscht", Severity.Success);
+        }
     }
 }

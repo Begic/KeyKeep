@@ -4,13 +4,16 @@ using KeyKeep.Data.Entities;
 using KeyKeep.Data.Provider;
 using KeyKeep.Data.Services;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddMudServices();
+
+builder.Services.AddMudServices(
+    conf => conf.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.BottomRight);
 
 builder.Services.AddTransient<IDataProvider, DataProvider>();
 builder.Services.AddTransient<ILoginProvider, LoginProvider>();
@@ -19,6 +22,7 @@ builder.Services.AddScoped<UserService>();
 
 builder.Services.AddDbContextFactory<DataBaseContext>(options =>
     options.UseSqlite(@"DataSource=MyDataBase.db;"));
+
 
 var app = builder.Build();
 
