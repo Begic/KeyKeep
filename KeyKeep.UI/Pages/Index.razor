@@ -13,25 +13,22 @@
     <Content>
         @if (allPasswordInfos.Count != 0)
         {
-            <MudDataGrid Items="@allPasswordInfos"
-                     T="PasswordInfo"
-                     Dense="true"
-                     Striped="true"
-                     Virtualize="true"
-                     Hover="true">
-                <PropertyColumn Property="x => x.Title" />
-                <PropertyColumn Property="x => x.Description" />
-                <PropertyColumn Property="x => x.URL" />
-                <PropertyColumn Property="x => x.UserName" />
-                <PropertyColumn Property="x => x.UserPassword" />
-                <TemplateColumn>
-                    <CellTemplate>
-                        <MudStack Row>
-                        <MudFab Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)" />
-                        <MudFab Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
-                    </MudStack>
-                </CellTemplate>
-            </TemplateColumn>
+            <MudDataGrid Items="@allPasswordInfos">
+                <Columns>
+                    <PropertyColumn Title="Titel" Property="x => x.Title" />
+                    <PropertyColumn Title="Beschreibung" Property="x => x.Description" />
+                    <PropertyColumn Title="Link" Property="x => x.URL" />
+                    <PropertyColumn Title="Benutzername" Property="x => x.UserName" />
+                    <PropertyColumn Title="Passwort" Property="x => x.UserPassword" />
+                    <TemplateColumn>
+                        <CellTemplate>
+                            <MudStack Row>
+                            <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)" />
+                            <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
         </MudDataGrid>
         }
         else

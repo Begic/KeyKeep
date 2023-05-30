@@ -71,4 +71,20 @@ public class DataProvider : IDataProvider
 
         await db.SaveChangesAsync();
     }
+
+    public async Task<PasswordInfo?> GetPasswordInfo(int? passwordId)
+    {
+        await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
+
+        return await db.Passwords.Where(x=> x.Id == passwordId).Select(x=> new PasswordInfo
+        {
+            Id = x.Id,
+            Description = x.Description,
+            Title = x.Title,
+            URL = x.URL,
+            UserName = x.UserName,
+            IsDeleted = x.IsDeleted,
+            UserPassword = x.UserPassword,
+        }).FirstOrDefaultAsync();
+    }
 }
