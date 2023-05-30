@@ -1,0 +1,10 @@
+
+https://github.com/farisbegic
+
+add/Delete/Update
+PW autom erstellen 
+länge des pw angeben
+isdelete
+logout
+Verschlüsseln
+
