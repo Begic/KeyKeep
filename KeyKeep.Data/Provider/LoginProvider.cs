@@ -13,11 +13,11 @@ public class LoginProvider : ILoginProvider
         this.factory = factory;
     }
 
-    public async Task<LoginInfo?> CheckUserForLogin(string email, string password)
+    public async Task<LoginInfo?> CheckUserForLogin(LoginInfo loginModel)
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return await db.Users.Where(x => x.Email.ToLower() == email.ToLower() && x.LoginPassword == password)
+        return await db.Users.Where(x => x.Email.ToLower() == loginModel.Email.ToLower() && x.LoginPassword == loginModel.Password)
             .Select(x => new LoginInfo
             {
                 Id =x.Id,

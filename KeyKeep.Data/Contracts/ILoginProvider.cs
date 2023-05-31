@@ -4,5 +4,5 @@ namespace KeyKeep.Data.Contracts;
 
 public interface ILoginProvider
 {
-    Task<LoginInfo?> CheckUserForLogin(string email, string password);
+    Task<LoginInfo?> CheckUserForLogin(LoginInfo loginModel);
 }
