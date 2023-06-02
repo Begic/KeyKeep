@@ -2,20 +2,23 @@
 @inject ISnackbar Toaster
 
 <EditForm Model="@RegisterInfoToEdit" OnValidSubmit="@OnClickRegister">
+    
+    <FluentValidationValidator/>
+
     <MudDialog>
         <DialogContent>
             <MudGrid>
                 <MudItem md="12">
-                    <MudTextField @bind-Value="@RegisterInfoToEdit.FirstName" Label="Vorname" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="@RegisterInfoToEdit.FirstName" For="@(() => RegisterInfoToEdit.FirstName)" Label="Vorname" Variant="Variant.Outlined"/>
                 </MudItem>
                 <MudItem md="12">
-                    <MudTextField @bind-Value="@RegisterInfoToEdit.LastName" Label="Nachname" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="@RegisterInfoToEdit.LastName" For="@(() => RegisterInfoToEdit.LastName)" Label="Nachname" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem md="12">
-                    <MudTextField @bind-Value="@RegisterInfoToEdit.Email" InputType="InputType.Email" Label="E-Mail" Variant="Variant.Outlined" />
+                    <MudTextField @bind-Value="@RegisterInfoToEdit.Email" For="@(() => RegisterInfoToEdit.Email)" InputType="InputType.Email" Label="E-Mail" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem md="12">
-                    <MudTextField @bind-Value="RegisterInfoToEdit.LoginPassword" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
+                    <MudTextField @bind-Value="RegisterInfoToEdit.LoginPassword" For="@(() => RegisterInfoToEdit.LoginPassword)" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
                 </MudItem>
             </MudGrid>
         </DialogContent>

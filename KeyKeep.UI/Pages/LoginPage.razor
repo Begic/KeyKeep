@@ -18,7 +18,7 @@
                         <MudTextField Immediate="true" @bind-Value="@LoginModel.Password" For="@(() => LoginModel.Password)" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort"/>
                         <Divider Margin="16px"/>
                         <MudButton Class="mb-2" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" ButtonType="ButtonType.Submit" EndIcon="@Icons.Material.Filled.Login">Anmelden</MudButton>
-                        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" ButtonType="ButtonType.Button" OnClick="OnClickRegister" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
+                        <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="OnClickRegister" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
                     </MudItem>
                     <MudItem xs="3"/>
                 </MudGrid>
@@ -26,9 +26,6 @@
         </DefaultLayout>
     </MudPaper>
 </EditForm>
-
-
-
 
 @code
 {
