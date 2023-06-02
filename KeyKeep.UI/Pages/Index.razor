@@ -13,7 +13,11 @@
     <Content>
         @if (allPasswordInfos.Count != 0)
         {
-            <MudDataGrid Items="@allPasswordInfos">
+            <MudDataGrid Items="@allPasswordInfos"
+                         Dense="true"
+                         Striped="true"
+                         Hover="true"
+                         ColumnResizeMode="ResizeMode.Column">
                 <Columns>
                     <PropertyColumn Title="Titel" Property="x => x.Title" />
                     <PropertyColumn Title="Beschreibung" Property="x => x.Description" />

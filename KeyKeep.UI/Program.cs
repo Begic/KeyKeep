@@ -38,7 +38,16 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
             FirstName = "Admin",
             LastName = "User",
             Email = "admin@user.at",
-            LoginPassword = "admin123"
+            LoginPassword = "admin123",
+            Passwords = new List<Password>()
+            {
+                new Password
+                {
+                    Title = "Für KeeyKep",
+                    UserName = "admin@user.at",
+                    UserPassword = "admin123"
+                }
+            }
         });
 
         await db.SaveChangesAsync();
