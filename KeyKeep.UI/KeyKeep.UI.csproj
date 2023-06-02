@@ -6,7 +6,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentValidation" Version="11.5.2" />
+		<PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
 		<ProjectReference Include="..\KeyKeep.Data\KeyKeep.Data.csproj" />	
 		<PackageReference Include="MudBlazor" Version="6.2.3" />
 	</ItemGroup>
