@@ -41,12 +41,12 @@
     {
         await RegisterProvider.AddUser(RegisterInfoToEdit);
         MudDialog.Close();
-        Toaster.Add("Erfolgreich registriert", Severity.Success);
+        Toaster.Add("Erfolgreich registriert", MudBlazor.Severity.Success);
     }
 
     private async Task OnClickCancel()
     {
-        Toaster.Add("Abgebrochen", Severity.Error);
+        Toaster.Add("Abgebrochen", MudBlazor.Severity.Error);
         MudDialog.Cancel();
     }
 

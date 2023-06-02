@@ -16,8 +16,7 @@
             <MudDataGrid Items="@allPasswordInfos"
                          Dense="true"
                          Striped="true"
-                         Hover="true"
-                         ColumnResizeMode="ResizeMode.Column">
+                         Hover="true">
                 <Columns>
                     <PropertyColumn Title="Titel" Property="x => x.Title" />
                     <PropertyColumn Title="Beschreibung" Property="x => x.Description" />
@@ -98,7 +97,7 @@
         {
             await DataProvider.DeletePassword(item);
 
-            Toaster.Add("Erfolgreich gelöscht", Severity.Success);
+            Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
         }
     }
 }
