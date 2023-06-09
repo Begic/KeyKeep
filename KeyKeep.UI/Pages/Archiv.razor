@@ -88,6 +88,8 @@
         {
             await DataProvider.DeletePassword(item);
 
+            await Refresh();
+
             Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
         }
     }
@@ -96,7 +98,9 @@
     {
         if (item != null)
         {
-            await DataProvider.DeletePassword(item);
+            await DataProvider.ArchivePassword(item);
+
+            await Refresh();
 
             Toaster.Add("Erfolgreich wiederhergestellt", MudBlazor.Severity.Success);
         }

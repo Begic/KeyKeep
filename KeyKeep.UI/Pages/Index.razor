@@ -100,6 +100,8 @@
         {
             await DataProvider.ArchivePassword(item);
 
+            await Refresh();
+
             Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
         }
     }
