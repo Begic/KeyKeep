@@ -21,7 +21,7 @@ public class DataProvider : IDataProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return await db.Passwords.Where(x => x.UserId == userId && !x.IsDeleted).Select(x => new PasswordInfo
+        return await db.Passwords.Where(x => x.UserId == userId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Title = x.Title,
@@ -33,15 +33,15 @@ public class DataProvider : IDataProvider
         }).ToListAsync().ConfigureAwait(false);
     }
 
-    public async Task DeletePassword(PasswordInfo item)
+    public async Task ArchivePassword(PasswordInfo item)
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        var toDelete = await db.Passwords.FirstOrDefaultAsync(x => x.Id == item.Id).ConfigureAwait(false);
+        var toArchiv = await db.Passwords.FirstOrDefaultAsync(x => x.Id == item.Id).ConfigureAwait(false);
 
-        if (toDelete != null)
+        if (toArchiv != null)
         {
-            db.Passwords.Remove(toDelete);
+            toArchiv.IsDeleted = !toArchiv.IsDeleted;
 
             await db.SaveChangesAsync();
         }
@@ -76,7 +76,7 @@ public class DataProvider : IDataProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return await db.Passwords.Where(x=> x.Id == passwordId).Select(x=> new PasswordInfo
+        return await db.Passwords.Where(x => x.Id == passwordId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Description = x.Description,
@@ -86,5 +86,19 @@ public class DataProvider : IDataProvider
             IsDeleted = x.IsDeleted,
             UserPassword = x.UserPassword,
         }).FirstOrDefaultAsync();
+    }
+
+    public async Task DeletePassword(PasswordInfo item)
+    {
+        await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
+
+        var toDelete = await db.Passwords.FirstOrDefaultAsync(x => x.Id == item.Id).ConfigureAwait(false);
+
+        if (toDelete != null)
+        {
+            db.Passwords.Remove(toDelete);
+
+            await db.SaveChangesAsync();
+        }
     }
 }

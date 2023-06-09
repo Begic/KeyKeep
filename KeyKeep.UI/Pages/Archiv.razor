@@ -1,8 +1,104 @@
 ﻿@page "/Archiv"
+@inject IDataProvider DataProvider
+@inject IDialogService DialogService
+@inject ISnackbar Toaster
+@inject UserService UserService
 
-<h3>Archiv</h3>
+<PageTitle>Archiv</PageTitle>
+
+<DefaultLayout>
+    <Content>
+        @if (allArchivedPasswordInfos.Count != 0)
+        {
+            <MudDataGrid Items="@allArchivedPasswordInfos"
+                     Dense="true"
+                     Striped="true"
+                     Hover="true">
+                <Columns>
+                    <PropertyColumn Title="Titel" Property="x => x.Title" />
+                    <PropertyColumn Title="Beschreibung" Property="x => x.Description" />
+                    <PropertyColumn Title="Link" Property="x => x.URL" />
+                    <PropertyColumn Title="Benutzername" Property="x => x.UserName" />
+                    <PropertyColumn Title="Passwort" Property="x => x.UserPassword" />
+                    <TemplateColumn>
+                        <CellTemplate>
+                            <MudStack Row>
+
+                            <MudTooltip>
+                                <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Info" OnClick="() => OnClickShowDetails(context.Item)" />
+                            </MudTooltip>
+
+                            <MudTooltip>
+                                <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickReactivate(context.Item)" />
+                            </MudTooltip>
+
+                            <MudTooltip>
+                                <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
+                            </MudTooltip>
+
+                        </MudStack>
+                    </CellTemplate>
+                </TemplateColumn>
+            </Columns>
+        </MudDataGrid>
+        }
+        else
+        {
+            <MudText Style="text-align: center" Typo="Typo.h3">Keine Archivierten Daten..</MudText>
+        }
+    </Content>
+</DefaultLayout>
 
 @code
 {
+    private List<PasswordInfo> allArchivedPasswordInfos;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await Refresh();
+
+        StateHasChanged();
+    }
+
+    private async Task Refresh()
+    {
+        allArchivedPasswordInfos = (await DataProvider.GetPasswordsFromUser(UserService.CurrentUser.Id)).Where(x => x.IsDeleted).ToList() ?? new List<PasswordInfo>();
+    }
+
+    private async Task OnClickShowDetails(PasswordInfo item)
+    {
+        var options = new DialogOptions
+            {
+                CloseOnEscapeKey = true
+            };
+
+        var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", new DialogParameters
+        {
+            {nameof(DialogAddPassword.PasswordId), item.Id},
+            {nameof(DialogAddPassword.IsDeleted), item.IsDeleted},
+        }, options);
+        var ka = dialogResult.Result;
+
+        await Refresh();
+    }
+
+    private async Task OnClickDelete(PasswordInfo item)
+    {
+        if (item != null)
+        {
+            await DataProvider.DeletePassword(item);
+
+            Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
+        }
+    }
+
+    private async Task OnClickReactivate(PasswordInfo item)
+    {
+        if (item != null)
+        {
+            await DataProvider.DeletePassword(item);
+
+            Toaster.Add("Erfolgreich wiederhergestellt", MudBlazor.Severity.Success);
+        }
+    }
 }

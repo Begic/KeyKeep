@@ -27,7 +27,7 @@
                         <CellTemplate>
                             <MudStack Row>
                             <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)" />
-                            <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
+                            <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickArchiv(context.Item)" />
                         </MudStack>
                     </CellTemplate>
                 </TemplateColumn>
@@ -45,8 +45,6 @@
 {
     private List<PasswordInfo> allPasswordInfos;
 
-    private PasswordInfo selectedPasswordInfo;
-
     protected override async Task OnInitializedAsync()
     {
         await Refresh();
@@ -56,7 +54,7 @@
 
     private async Task Refresh()
     {
-        allPasswordInfos = await DataProvider.GetPasswordsFromUser(UserService.CurrentUser.Id) ?? new List<PasswordInfo>();
+        allPasswordInfos = (await DataProvider.GetPasswordsFromUser(UserService.CurrentUser.Id)).Where(x=> !x.IsDeleted).ToList() ?? new List<PasswordInfo>();
     }
 
     private async Task OnClickAdd()
@@ -68,7 +66,11 @@
                 MaxWidth = MaxWidth.Small,
             };
 
-        var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", options);
+        var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", new DialogParameters
+        {
+            {nameof(DialogAddPassword.PasswordId), null},
+            {nameof(DialogAddPassword.IsDeleted), false},
+        }, options);
         
         var ka = await dialogResult.Result;
 
@@ -85,17 +87,18 @@
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", new DialogParameters
         {
             {nameof(DialogAddPassword.PasswordId), item.Id},
+            {nameof(DialogAddPassword.IsDeleted), item.IsDeleted},
         }, options);
         var ka = dialogResult.Result;
 
         await Refresh();
     }
 
-    private async Task OnClickDelete(PasswordInfo item)
+    private async Task OnClickArchiv(PasswordInfo item)
     {
         if (item != null)
         {
-            await DataProvider.DeletePassword(item);
+            await DataProvider.ArchivePassword(item);
 
             Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
         }
