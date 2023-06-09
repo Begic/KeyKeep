@@ -9,20 +9,20 @@
 <PageTitle>Login</PageTitle>
 
 <EditForm Model="LoginModel" OnValidSubmit="@OnClickTryLogin">
-    <FluentValidationValidator/>
+    <FluentValidationValidator />
     <MudPaper Style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); min-width: 650px">
         <DefaultLayout>
             <Content>
                 <MudGrid>
-                    <MudItem xs="3"/>
+                    <MudItem xs="3" />
                     <MudItem xs="6">
-                        <MudTextField Immediate="true" @bind-Value="@LoginModel.Email" For="@(() => LoginModel.Email)" Label="E-Mail" Variant="Variant.Outlined" InputType="InputType.Email"/>
-                        <MudTextField Immediate="true" @bind-Value="@LoginModel.Password" For="@(() => LoginModel.Password)" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort"/>
-                        <Divider Margin="16px"/>
+                        <MudTextField Immediate="true" @bind-Value="@LoginModel.Email" For="@(() => LoginModel.Email)" Label="E-Mail" Variant="Variant.Outlined" InputType="InputType.Email" />
+                        <MudTextField Immediate="true" @bind-Value="@LoginModel.Password" For="@(() => LoginModel.Password)" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
+                        <Divider Margin="16px" />
                         <MudButton Class="mb-2" FullWidth="true" Variant="Variant.Filled" Color="Color.Success" ButtonType="ButtonType.Submit" EndIcon="@Icons.Material.Filled.Login">Anmelden</MudButton>
                         <MudButton FullWidth="true" Variant="Variant.Filled" Color="Color.Primary" OnClick="OnClickRegister" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
                     </MudItem>
-                    <MudItem xs="3"/>
+                    <MudItem xs="3" />
                 </MudGrid>
             </Content>
         </DefaultLayout>

@@ -23,9 +23,11 @@
             </NavLink>
         </div>
         <div class="nav-item px-3 position-absolute bottom-0 end-0">
-            <button class="nav-link" @onclick="OnClickLogout">
-                <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
-            </button>
+            <MudTooltip Text="Abmelden">
+                <button class="nav-link" @onclick="OnClickLogout">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
+                </button>
+            </MudTooltip>
         </div>
     </nav>
 </div>

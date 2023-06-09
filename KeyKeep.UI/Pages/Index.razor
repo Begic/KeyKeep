@@ -8,15 +8,17 @@
 
 <DefaultLayout>
     <Actions>
-        <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="@OnClickAdd" EndIcon="@Icons.Material.Filled.AddCircle">Hinzufügen</MudButton>
+        <MudTooltip Text="Hinzufügen">
+            <MudButton Color="Color.Success" ButtonType="ButtonType.Button" Variant="Variant.Filled" OnClick="@OnClickAdd" EndIcon="@Icons.Material.Filled.AddCircle">Hinzufügen</MudButton>
+        </MudTooltip>
     </Actions>
     <Content>
         @if (allPasswordInfos.Count != 0)
         {
             <MudDataGrid Items="@allPasswordInfos"
-                         Dense="true"
-                         Striped="true"
-                         Hover="true">
+                     Dense="true"
+                     Striped="true"
+                     Hover="true">
                 <Columns>
                     <PropertyColumn Title="Titel" Property="x => x.Title" />
                     <PropertyColumn Title="Beschreibung" Property="x => x.Description" />
@@ -26,8 +28,12 @@
                     <TemplateColumn>
                         <CellTemplate>
                             <MudStack Row>
-                            <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)" />
-                            <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickArchiv(context.Item)" />
+                            <MudTooltip Text="Bearbeiten">
+                                <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)" />
+                            </MudTooltip>
+                            <MudTooltip Text="Archivieren">
+                                <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickArchiv(context.Item)" />
+                            </MudTooltip>
                         </MudStack>
                     </CellTemplate>
                 </TemplateColumn>
@@ -54,7 +60,7 @@
 
     private async Task Refresh()
     {
-        allPasswordInfos = (await DataProvider.GetPasswordsFromUser(UserService.CurrentUser.Id)).Where(x=> !x.IsDeleted).ToList() ?? new List<PasswordInfo>();
+        allPasswordInfos = (await DataProvider.GetPasswordsFromUser(UserService.CurrentUser.Id)).Where(x => !x.IsDeleted).ToList() ?? new List<PasswordInfo>();
     }
 
     private async Task OnClickAdd()
@@ -71,7 +77,7 @@
             {nameof(DialogAddPassword.PasswordId), null},
             {nameof(DialogAddPassword.IsDeleted), false},
         }, options);
-        
+
         var ka = await dialogResult.Result;
 
         await Refresh();

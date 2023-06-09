@@ -2,14 +2,14 @@
 @inject ISnackbar Toaster
 
 <EditForm Model="@RegisterInfoToEdit" OnValidSubmit="@OnClickRegister">
-    
-    <FluentValidationValidator/>
+
+    <FluentValidationValidator />
 
     <MudDialog>
         <DialogContent>
             <MudGrid>
                 <MudItem md="12">
-                    <MudTextField @bind-Value="@RegisterInfoToEdit.FirstName" For="@(() => RegisterInfoToEdit.FirstName)" Label="Vorname" Variant="Variant.Outlined"/>
+                    <MudTextField @bind-Value="@RegisterInfoToEdit.FirstName" For="@(() => RegisterInfoToEdit.FirstName)" Label="Vorname" Variant="Variant.Outlined" />
                 </MudItem>
                 <MudItem md="12">
                     <MudTextField @bind-Value="@RegisterInfoToEdit.LastName" For="@(() => RegisterInfoToEdit.LastName)" Label="Nachname" Variant="Variant.Outlined" />
@@ -23,8 +23,12 @@
             </MudGrid>
         </DialogContent>
         <DialogActions>
-            <MudButton Color="Color.Error" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Cancel" OnClick="@OnClickCancel">Abbrechen</MudButton>
-            <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
+            <MudTooltip Text="Abbrechen">
+                <MudButton Color="Color.Error" ButtonType="ButtonType.Button" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Cancel" OnClick="@OnClickCancel">Abbrechen</MudButton>
+            </MudTooltip>
+            <MudTooltip Text="Speichern">
+                <MudButton Color="Color.Primary" ButtonType="ButtonType.Submit" Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.PersonAdd">Registrieren</MudButton>
+            </MudTooltip>
         </DialogActions>
     </MudDialog>
 </EditForm>
