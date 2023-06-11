@@ -1,4 +1,5 @@
 ﻿@page "/Archiv"
+
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
 @inject ISnackbar Toaster
@@ -24,15 +25,15 @@
                         <CellTemplate>
                             <MudStack Row>
 
-                            <MudTooltip>
+                            <MudTooltip Text="Zeige Details">
                                 <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Info" OnClick="() => OnClickShowDetails(context.Item)" />
                             </MudTooltip>
 
-                            <MudTooltip>
+                            <MudTooltip Text="Wiederherstellen">
                                 <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.RestartAlt" OnClick="() => OnClickReactivate(context.Item)" />
                             </MudTooltip>
 
-                            <MudTooltip>
+                            <MudTooltip Text="Löschen">
                                 <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickDelete(context.Item)" />
                             </MudTooltip>
 
@@ -67,16 +68,14 @@
 
     private async Task OnClickShowDetails(PasswordInfo item)
     {
-        var options = new DialogOptions
-            {
-                CloseOnEscapeKey = true
-            };
-
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", new DialogParameters
         {
             {nameof(DialogAddPassword.PasswordId), item.Id},
             {nameof(DialogAddPassword.IsDeleted), item.IsDeleted},
-        }, options);
+        }, new DialogOptions
+        {
+            CloseOnEscapeKey = true
+        });
         var ka = dialogResult.Result;
 
         await Refresh();
@@ -86,11 +85,20 @@
     {
         if (item != null)
         {
-            await DataProvider.DeletePassword(item);
+            var result = await DialogService.ShowAsync<DialogDelete>("Achtung !", new DialogParameters(), new DialogOptions
+            {
+                CloseOnEscapeKey = true
+            });
 
-            await Refresh();
 
-            Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
+            if ((bool)(await result.Result).Data)
+            {
+                await DataProvider.DeletePassword(item);
+
+                await Refresh();
+
+                Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
+            }
         }
     }
 

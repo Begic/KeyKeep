@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
 @inject ISnackbar Toaster
@@ -65,38 +66,31 @@
 
     private async Task OnClickAdd()
     {
-        var options = new DialogOptions
-            {
-                Position = DialogPosition.Center,
-                DisableBackdropClick = true,
-                MaxWidth = MaxWidth.Small,
-            };
-
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", new DialogParameters
         {
             {nameof(DialogAddPassword.PasswordId), null},
             {nameof(DialogAddPassword.IsDeleted), false},
-        }, options);
+        }, new DialogOptions
+        {
+            CloseOnEscapeKey = true
+        });
 
         var ka = await dialogResult.Result;
-
         await Refresh();
     }
 
     private async Task OnClickEdit(PasswordInfo item)
     {
-        var options = new DialogOptions
-            {
-                CloseOnEscapeKey = true
-            };
-
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", new DialogParameters
         {
             {nameof(DialogAddPassword.PasswordId), item.Id},
             {nameof(DialogAddPassword.IsDeleted), item.IsDeleted},
-        }, options);
-        var ka = dialogResult.Result;
+        }, new DialogOptions
+        {
+            CloseOnEscapeKey = true
+        });
 
+        var ka = dialogResult.Result;
         await Refresh();
     }
 
@@ -104,11 +98,20 @@
     {
         if (item != null)
         {
-            await DataProvider.ArchivePassword(item);
+            var result = await DialogService.ShowAsync<DialogDelete>("Achtung !", new DialogParameters(), new DialogOptions
+            {
+                CloseOnEscapeKey = true
+            });
 
-            await Refresh();
 
-            Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
+            if ((bool)(await result.Result).Data)
+            {
+                await DataProvider.ArchivePassword(item);
+
+                await Refresh();
+
+                Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
+            }
         }
     }
 }
