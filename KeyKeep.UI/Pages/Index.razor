@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using System.Security.Cryptography
 
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
@@ -55,6 +56,35 @@
 
     protected override async Task OnInitializedAsync()
     {
+        var withsamebyte = "Hallo";
+        
+        var withdifferent = "Hallo";
+
+        var ka = "Test";
+        var ka1 = "Test";
+
+        using (AesCryptoServiceProvider aes = new AesCryptoServiceProvider())
+        {
+            aes.KeySize = 256;
+
+            byte[] key = aes.Key;
+
+            byte[] encrypted = EditData.Encrypt(withsamebyte, key);
+            string decrypted = EditData.Decrypt(encrypted, key);
+
+            Console.WriteLine(decrypted);
+        }
+
+      
+        byte[] encrypted2 = EditData.Encrypt(withdifferent, new byte[32]);
+        string testwithdifferent = EditData.Decrypt(encrypted2, new byte[32]);
+      
+        byte[] encrypted3 = EditData.Encrypt(ka, new byte[32]);
+        string testwithdifferent3 = EditData.Decrypt(encrypted3, new byte[32]);
+
+        byte[] encrypted4 = EditData.Encrypt(ka1, new byte[32]);
+        string testwithdifferent4 = EditData.Decrypt(encrypted4, new byte[32]);
+
         await Refresh();
 
         StateHasChanged();
@@ -100,9 +130,9 @@
         if (item != null)
         {
             var result = await DialogService.ShowAsync<DialogDelete>("Achtung !", new DialogParameters(), new DialogOptions
-            {
-                CloseOnEscapeKey = true
-            });
+                {
+                    CloseOnEscapeKey = true
+                });
 
 
             if ((bool)(await result.Result).Data)
