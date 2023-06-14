@@ -1,5 +1,4 @@
 ﻿@page "/"
-@using System.Security.Cryptography
 
 @inject IDataProvider DataProvider
 @inject IDialogService DialogService
@@ -18,30 +17,30 @@
         @if (allPasswordInfos.Count != 0)
         {
             <MudDataGrid Items="@allPasswordInfos"
-                     Dense="true"
-                     Striped="true"
-                     Hover="true"
-                     Virtualize="true">
+                         Dense="true"
+                         Striped="true"
+                         Hover="true"
+                         Virtualize="true">
                 <Columns>
-                    <PropertyColumn Title="Titel" Property="x => x.Title" />
-                    <PropertyColumn Title="Beschreibung" Property="x => x.Description" />
-                    <PropertyColumn Title="Link" Property="x => x.URL" />
-                    <PropertyColumn Title="Benutzername" Property="x => x.UserName" />
-                    <PropertyColumn Title="Passwort" Property="x => x.UserPassword" />
+                    <PropertyColumn Title="Titel" Property="x => x.Title"/>
+                    <PropertyColumn Title="Beschreibung" Property="x => x.Description"/>
+                    <PropertyColumn Title="Link" Property="x => x.URL"/>
+                    <PropertyColumn Title="Benutzername" Property="x => x.UserName"/>
+                    <PropertyColumn Title="Passwort" Property="x => x.UserPassword"/>
                     <TemplateColumn>
                         <CellTemplate>
                             <MudStack Row>
-                            <MudTooltip Text="Bearbeiten">
-                                <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)" />
-                            </MudTooltip>
-                            <MudTooltip Text="Archivieren">
-                                <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickArchiv(context.Item)" />
-                            </MudTooltip>
-                        </MudStack>
-                    </CellTemplate>
-                </TemplateColumn>
-            </Columns>
-        </MudDataGrid>
+                                <MudTooltip Text="Bearbeiten">
+                                    <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Warning" StartIcon="@Icons.Material.Filled.Edit" OnClick="() => OnClickEdit(context.Item)"/>
+                                </MudTooltip>
+                                <MudTooltip Text="Archivieren">
+                                    <MudFab Size="Size.Small" IconSize="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" OnClick="() => OnClickArchiv(context.Item)"/>
+                                </MudTooltip>
+                            </MudStack>
+                        </CellTemplate>
+                    </TemplateColumn>
+                </Columns>
+            </MudDataGrid>
         }
         else
         {
@@ -70,8 +69,8 @@
     {
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort hinzufügen", new DialogParameters
         {
-            {nameof(DialogAddPassword.PasswordId), null},
-            {nameof(DialogAddPassword.IsDeleted), false},
+            { nameof(DialogAddPassword.PasswordId), null },
+            { nameof(DialogAddPassword.IsDeleted), false }
         }, new DialogOptions
         {
             CloseOnEscapeKey = true
@@ -85,8 +84,8 @@
     {
         var dialogResult = await DialogService.ShowAsync<DialogAddPassword>("Passwort bearbeiten", new DialogParameters
         {
-            {nameof(DialogAddPassword.PasswordId), item.Id},
-            {nameof(DialogAddPassword.IsDeleted), item.IsDeleted},
+            { nameof(DialogAddPassword.PasswordId), item.Id },
+            { nameof(DialogAddPassword.IsDeleted), item.IsDeleted }
         }, new DialogOptions
         {
             CloseOnEscapeKey = true
@@ -101,9 +100,9 @@
         if (item != null)
         {
             var result = await DialogService.ShowAsync<DialogDelete>("Achtung !", new DialogParameters(), new DialogOptions
-                {
-                    CloseOnEscapeKey = true
-                });
+            {
+                CloseOnEscapeKey = true
+            });
 
 
             if ((bool)(await result.Result).Data)
@@ -112,7 +111,7 @@
 
                 await Refresh();
 
-                Toaster.Add("Erfolgreich gelöscht", MudBlazor.Severity.Success);
+                Toaster.Add("Erfolgreich gelöscht", Severity.Success);
             }
         }
     }
