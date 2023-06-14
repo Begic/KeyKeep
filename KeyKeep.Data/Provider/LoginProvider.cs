@@ -1,5 +1,6 @@
 ﻿using KeyKeep.Data.Contracts;
 using KeyKeep.Data.Models;
+using KeyKeep.Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace KeyKeep.Data.Provider;
@@ -17,14 +18,20 @@ public class LoginProvider : ILoginProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return new LoginInfo();
+        foreach (var user in await db.Users.ToListAsync())
+        {
+            if (EditData.Decrypt(user.Email, new byte[32]) == loginModel.Email && 
+                EditData.Decrypt(user.LoginPassword, new byte[32]) == loginModel.Password)
+            {
+                return new LoginInfo
+                {
+                    Id = user.Id,
+                    Email = EditData.Decrypt(user.Email, new byte[32]),
+                    Password = EditData.Decrypt(user.LoginPassword, new byte[32])
+                };
+            }
+        }
 
-        //return await db.Users.Where(x => x.Email.ToLower() == loginModel.Email.ToLower() && x.LoginPassword == loginModel.Password)
-        //    .Select(x => new LoginInfo
-        //    {
-        //        Id = x.Id,
-        //        Email = x.Email,
-        //        Password = x.LoginPassword
-        //    }).FirstOrDefaultAsync().ConfigureAwait(false);
+        return null;
     }
 }
