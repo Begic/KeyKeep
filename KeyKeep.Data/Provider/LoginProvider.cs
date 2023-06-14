@@ -22,7 +22,7 @@ public class LoginProvider : ILoginProvider
         //return await db.Users.Where(x => x.Email.ToLower() == loginModel.Email.ToLower() && x.LoginPassword == loginModel.Password)
         //    .Select(x => new LoginInfo
         //    {
-        //        Id =x.Id,
+        //        Id = x.Id,
         //        Email = x.Email,
         //        Password = x.LoginPassword
         //    }).FirstOrDefaultAsync().ConfigureAwait(false);

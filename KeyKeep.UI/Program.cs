@@ -43,15 +43,8 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
             {
                 FirstName = "Admin",
                 LastName = "User",
-                Email = EditData.Encrypt("admin@user.at", cryptKey),
-                LoginPassword = EditData.Encrypt("admin123", cryptKey),
-                CryptKeys = new List<CryptKey>
-                {
-                    new()
-                    { 
-                        KeyValue = cryptKey
-                    }
-                },
+                Email = EditData.Encrypt("admin@user.at", new byte[32]),
+                LoginPassword = EditData.Encrypt("admin123", new byte[32]),
                 Passwords = new List<Password>
                 {
                     new()
@@ -70,7 +63,6 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
                 }
             });
         }
-
         await db.SaveChangesAsync();
     }
 }
