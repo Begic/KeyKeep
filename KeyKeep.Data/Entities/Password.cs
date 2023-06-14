@@ -16,5 +16,5 @@ public class Password
 
     public bool IsDeleted { get; set; }
 
-    public List<Key> Keys { get; set; } = new();
+    public List<CryptKey> CryptKeys { get; set; } = new();
 }

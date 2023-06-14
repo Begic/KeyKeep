@@ -1,6 +1,6 @@
 ﻿namespace KeyKeep.Data.Entities;
 
-public class Key
+public class CryptKey
 {
     public int Id { get; set; }
 
@@ -9,4 +9,6 @@ public class Key
     
     public User User { get; set; }
     public int? UserId { get; set; }
+
+    public byte[] KeyValue { get; set; }
 }

@@ -25,10 +25,10 @@ public class DataProvider : IDataProvider
         {
             Id = x.Id,
             Title = x.Title,
-            URL = x.URL,
-            Description = x.Description,
-            UserName = x.UserName,
-            UserPassword = x.UserPassword,
+            //URL = x.URL,
+            //Description = x.Description,
+            //UserName = x.UserName,
+            //UserPassword = x.UserPassword,
             IsDeleted = x.IsDeleted,
         }).ToListAsync().ConfigureAwait(false);
     }
@@ -62,10 +62,10 @@ public class DataProvider : IDataProvider
 
         toEdit.Title = passwordInfoToEdit.Title;
         toEdit.Description = passwordInfoToEdit.Description;
-        toEdit.URL = passwordInfoToEdit.URL;
+        //toEdit.URL = passwordInfoToEdit.URL;
 
-        toEdit.UserName = passwordInfoToEdit.UserName;
-        toEdit.UserPassword = passwordInfoToEdit.UserPassword;
+        //toEdit.UserName = passwordInfoToEdit.UserName;
+        //toEdit.UserPassword = passwordInfoToEdit.UserPassword;
 
         toEdit.IsDeleted = passwordInfoToEdit.IsDeleted;
 
@@ -81,10 +81,10 @@ public class DataProvider : IDataProvider
             Id = x.Id,
             Description = x.Description,
             Title = x.Title,
-            URL = x.URL,
-            UserName = x.UserName,
-            IsDeleted = x.IsDeleted,
-            UserPassword = x.UserPassword,
+            //URL = x.URL,
+            //UserName = x.UserName,
+            //IsDeleted = x.IsDeleted,
+            //UserPassword = x.UserPassword,
         }).FirstOrDefaultAsync();
     }
 

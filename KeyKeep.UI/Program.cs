@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using KeyKeep.Data;
 using KeyKeep.Data.Contracts;
 using KeyKeep.Data.Entities;
@@ -33,22 +34,42 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
 
     if (!db.Users.Any())
     {
-        await db.Users.AddAsync(new User
+        using (var aes = new AesCryptoServiceProvider())
         {
-            FirstName = "Admin",
-            LastName = "User",
-            Email = "admin@user.at",
-            LoginPassword = "admin123",
-            Passwords = new List<Password>()
+            aes.KeySize = 256;
+            var cryptKey = aes.Key;
+
+            await db.Users.AddAsync(new User
             {
-                new Password
+                FirstName = "Admin",
+                LastName = "User",
+                Email = EditData.Encrypt("admin@user.at", cryptKey),
+                LoginPassword = EditData.Encrypt("admin123", cryptKey),
+                CryptKeys = new List<CryptKey>
                 {
-                    Title = "Für KeeyKep",
-                    UserName = "admin@user.at",
-                    UserPassword = "admin123"
+                    new()
+                    { 
+                        KeyValue = cryptKey
+                    }
+                },
+                Passwords = new List<Password>
+                {
+                    new()
+                    {
+                        Title = "Für KeeyKep",
+                        UserName = EditData.Encrypt("admin@user.at",cryptKey) ,
+                        UserPassword = EditData.Encrypt("admin123", cryptKey) ,
+                        CryptKeys = new List<CryptKey>
+                        {
+                            new()
+                            {
+                                KeyValue = cryptKey
+                            }
+                        }
+                    }
                 }
-            }
-        });
+            });
+        }
 
         await db.SaveChangesAsync();
     }

@@ -4,12 +4,12 @@ namespace KeyKeep.Data.Services;
 
 public static class EditData
 {
-    public static byte[] Encrypt(string inputValue)
+    public static byte[] Encrypt(string stringInput, byte[] key)
     {
         byte[] encrypted;
         using (var aes = new AesCryptoServiceProvider())
         {
-            aes.Key = new byte[32];
+            aes.Key = key;
 
             aes.GenerateIV();
 
@@ -23,7 +23,7 @@ public static class EditData
                 using (var csEncrypt = new CryptoStream(msEncrypt, encoder, CryptoStreamMode.Write))
                 using (var swEncrypt = new StreamWriter(csEncrypt))
                 {
-                    swEncrypt.Write(inputValue.Reverse());
+                    swEncrypt.Write(stringInput.Reverse());
                 }
                 encrypted = msEncrypt.ToArray();
             }
@@ -31,16 +31,16 @@ public static class EditData
         return encrypted;
     }
 
-    public static string Decrypt(byte[] inputValue)
+    public static string Decrypt(byte[] byteInput, byte[] key)
     {
         string decrypted;
         using (var aes = new AesCryptoServiceProvider())
         {
-            aes.Key = new byte[32];
+            aes.Key = key;
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.PKCS7;
 
-            using (var msDecryptor = new MemoryStream(inputValue))
+            using (var msDecryptor = new MemoryStream(byteInput))
             {
                 var readIV = new byte[16];
                 msDecryptor.Read(readIV, 0, 16);

@@ -17,12 +17,14 @@ public class LoginProvider : ILoginProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return await db.Users.Where(x => x.Email.ToLower() == loginModel.Email.ToLower() && x.LoginPassword == loginModel.Password)
-            .Select(x => new LoginInfo
-            {
-                Id =x.Id,
-                Email = x.Email,
-                Password = x.LoginPassword
-            }).FirstOrDefaultAsync().ConfigureAwait(false);
+        return new LoginInfo();
+
+        //return await db.Users.Where(x => x.Email.ToLower() == loginModel.Email.ToLower() && x.LoginPassword == loginModel.Password)
+        //    .Select(x => new LoginInfo
+        //    {
+        //        Id =x.Id,
+        //        Email = x.Email,
+        //        Password = x.LoginPassword
+        //    }).FirstOrDefaultAsync().ConfigureAwait(false);
     }
 }

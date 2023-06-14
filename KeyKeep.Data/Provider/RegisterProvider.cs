@@ -1,6 +1,8 @@
-﻿using KeyKeep.Data.Contracts;
+﻿using System.Security.Cryptography;
+using KeyKeep.Data.Contracts;
 using KeyKeep.Data.Entities;
 using KeyKeep.Data.Models;
+using KeyKeep.Data.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace KeyKeep.Data.Provider;
@@ -18,13 +20,26 @@ public class RegisterProvider : IRegisterProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        await db.Users.AddAsync(new User
+        using (var aes = new AesCryptoServiceProvider())
         {
-            FirstName = data.FirstName,
-            LastName = data.LastName,
-            Email = data.Email,
-            LoginPassword = data.LoginPassword
-        });
+            aes.KeySize = 256;
+            var cryptKey = aes.Key;
+
+            await db.Users.AddAsync(new User
+            {
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                Email = EditData.Encrypt(data.Email, cryptKey),
+                LoginPassword = EditData.Encrypt(data.LoginPassword, cryptKey),
+                CryptKeys = new List<CryptKey>
+                {
+                    new()
+                    {
+                        KeyValue = cryptKey
+                    }
+                }
+            });
+        }
 
         await db.SaveChangesAsync();
     }

@@ -11,5 +11,5 @@ public class User
     public byte[] LoginPassword { get; set; }
 
     public List<Password> Passwords { get; set; } = new();
-    public List<Key> Keys { get; set; } = new();
+    public List<CryptKey> CryptKeys { get; set; } = new();
 }
