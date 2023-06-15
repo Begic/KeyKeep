@@ -1,4 +1,5 @@
-﻿using KeyKeep.Data.Contracts;
+﻿using System.Security.Cryptography;
+using KeyKeep.Data.Contracts;
 using KeyKeep.Data.Entities;
 using KeyKeep.Data.Models;
 using KeyKeep.Data.Services;
@@ -21,15 +22,17 @@ public class DataProvider : IDataProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return await db.Passwords.Where(x => x.UserId == userId).Select(x => new PasswordInfo
+        var test = await db.Passwords.Include(x=> x.CryptKeys).FirstOrDefaultAsync(x => x.UserId == userId).ConfigureAwait(false);
+
+        return await db.Passwords.Include(x=> x.CryptKeys).Where(x => x.UserId == userId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Title = x.Title,
-            //URL = x.URL,
-            //Description = x.Description,
-            //UserName = x.UserName,
-            //UserPassword = x.UserPassword,
-            IsDeleted = x.IsDeleted,
+            Description = x.Description,
+            URL = EditData.Decrypt(x.URL, x.CryptKeys.First(y => y.Id == x.Id).KeyValue),
+            UserName = EditData.Decrypt(x.URL, x.CryptKeys.First(y => y.Id == x.Id).KeyValue),
+            UserPassword = EditData.Decrypt(x.URL, x.CryptKeys.First(y => y.Id == x.Id).KeyValue),
+            IsDeleted = x.IsDeleted
         }).ToListAsync().ConfigureAwait(false);
     }
 
@@ -62,12 +65,24 @@ public class DataProvider : IDataProvider
 
         toEdit.Title = passwordInfoToEdit.Title;
         toEdit.Description = passwordInfoToEdit.Description;
-        //toEdit.URL = passwordInfoToEdit.URL;
-
-        //toEdit.UserName = passwordInfoToEdit.UserName;
-        //toEdit.UserPassword = passwordInfoToEdit.UserPassword;
-
         toEdit.IsDeleted = passwordInfoToEdit.IsDeleted;
+
+        using (var aes = new AesCryptoServiceProvider())
+        {
+            aes.KeySize = 256;
+
+            toEdit.URL = EditData.Encrypt(passwordInfoToEdit.URL, aes.Key);
+            toEdit.UserName = EditData.Encrypt(passwordInfoToEdit.UserName, aes.Key);
+            toEdit.UserPassword = EditData.Encrypt(passwordInfoToEdit.UserPassword, aes.Key);
+
+            toEdit.CryptKeys = new List<CryptKey>
+            {
+                new()
+                {
+                    KeyValue = aes.Key
+                }
+            };
+        }
 
         await db.SaveChangesAsync();
     }
@@ -76,15 +91,16 @@ public class DataProvider : IDataProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return await db.Passwords.Where(x => x.Id == passwordId).Select(x => new PasswordInfo
+        return await db.Passwords.Include(x=> x.CryptKeys).Where(x => x.Id == passwordId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Description = x.Description,
             Title = x.Title,
-            //URL = x.URL,
-            //UserName = x.UserName,
-            //IsDeleted = x.IsDeleted,
-            //UserPassword = x.UserPassword,
+            IsDeleted = x.IsDeleted,
+            URL = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue),
+            UserName = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue),
+            UserPassword = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue),
+            CryptKey = x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue
         }).FirstOrDefaultAsync();
     }
 

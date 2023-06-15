@@ -31,7 +31,6 @@ public class LoginProvider : ILoginProvider
                 };
             }
         }
-
         return null;
     }
 }

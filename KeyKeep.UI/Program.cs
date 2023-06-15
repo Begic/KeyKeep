@@ -37,7 +37,6 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
         using (var aes = new AesCryptoServiceProvider())
         {
             aes.KeySize = 256;
-            var cryptKey = aes.Key;
 
             await db.Users.AddAsync(new User
             {
@@ -50,13 +49,14 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
                     new()
                     {
                         Title = "Für KeeyKep",
-                        UserName = EditData.Encrypt("admin@user.at",cryptKey) ,
-                        UserPassword = EditData.Encrypt("admin123", cryptKey) ,
+                        URL = EditData.Encrypt("https://localhost:44349/", aes.Key),
+                        UserName = EditData.Encrypt("admin@user.at",aes.Key),
+                        UserPassword = EditData.Encrypt("admin123", aes.Key),
                         CryptKeys = new List<CryptKey>
                         {
                             new()
                             {
-                                KeyValue = cryptKey
+                                KeyValue = aes.Key
                             }
                         }
                     }
