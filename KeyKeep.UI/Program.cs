@@ -37,6 +37,8 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
         using (var aes = new AesCryptoServiceProvider())
         {
             aes.KeySize = 256;
+            aes.Mode = CipherMode.CBC;
+            aes.Key = new byte[32];
 
             await db.Users.AddAsync(new User
             {

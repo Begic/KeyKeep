@@ -1,11 +1,9 @@
-﻿using System.ComponentModel;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using KeyKeep.Data.Contracts;
 using KeyKeep.Data.Entities;
 using KeyKeep.Data.Models;
 using KeyKeep.Data.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace KeyKeep.Data.Provider;
 
@@ -22,23 +20,17 @@ public class DataProvider : IDataProvider
 
     public async Task<List<PasswordInfo>> GetPasswordsFromUser(int userId)
     {
-        //TODO so geht das nicht!
-        //    Key wird für den ersten Datensatz geholt, danach PasswordPropertyTextAttribute der nicht mehr 
-
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
-        
-        //var key = await db.Passwords.Include(x => x.CryptKeys)
-        //    .Where(x=> x.UserId == userId)
-        //    .SelectMany(x=> x.CryptKeys).FirstOrDefaultAsync().ConfigureAwait(false);
-        
-        return await db.Passwords.Include(x=> x.CryptKeys).Where(x => x.UserId == userId).Select(x => new PasswordInfo
+
+        return await db.Passwords.Include(x => x.CryptKeys).Where(x => x.UserId == userId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Title = x.Title,
             Description = x.Description,
-            URL = EditData.Decrypt(x.URL,x.CryptKeys.FirstOrDefault(y=> y.PasswordId == x.Id).KeyValue),
-            UserName = EditData.Decrypt(x.UserName, x.CryptKeys.FirstOrDefault(y=> y.PasswordId == x.Id).KeyValue),
-            UserPassword = EditData.Decrypt(x.UserPassword, x.CryptKeys.FirstOrDefault(y=> y.PasswordId == x.Id).KeyValue),
+            URL = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.PasswordId == x.Id).KeyValue),
+            UserName = EditData.Decrypt(x.UserName, x.CryptKeys.FirstOrDefault(y => y.PasswordId == x.Id).KeyValue),
+            UserPassword = EditData.Decrypt(x.UserPassword,
+                x.CryptKeys.FirstOrDefault(y => y.PasswordId == x.Id).KeyValue),
             IsDeleted = x.IsDeleted
         }).ToListAsync().ConfigureAwait(false);
     }
@@ -61,13 +53,18 @@ public class DataProvider : IDataProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        var toEdit = await db.Passwords.FirstOrDefaultAsync(x => x.Id == passwordInfoToEdit.Id).ConfigureAwait(false);
+        var toEdit = await db.Passwords.Include(x => x.CryptKeys)
+            .FirstOrDefaultAsync(x => x.Id == passwordInfoToEdit.Id).ConfigureAwait(false);
 
         if (toEdit == null)
         {
             await db.Passwords.AddAsync(toEdit = new Password());
 
             toEdit.UserId = userService.CurrentUser.Id;
+            toEdit.CryptKeys = new List<CryptKey>
+            {
+                new()
+            };
         }
 
         toEdit.Title = passwordInfoToEdit.Title;
@@ -77,18 +74,14 @@ public class DataProvider : IDataProvider
         using (var aes = new AesCryptoServiceProvider())
         {
             aes.KeySize = 256;
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
 
             toEdit.URL = EditData.Encrypt(passwordInfoToEdit.URL, aes.Key);
             toEdit.UserName = EditData.Encrypt(passwordInfoToEdit.UserName, aes.Key);
             toEdit.UserPassword = EditData.Encrypt(passwordInfoToEdit.UserPassword, aes.Key);
 
-            toEdit.CryptKeys = new List<CryptKey>
-            {
-                new()
-                {
-                    KeyValue = aes.Key
-                }
-            };
+            toEdit.CryptKeys.First().KeyValue = aes.Key;
         }
 
         await db.SaveChangesAsync();
@@ -98,15 +91,15 @@ public class DataProvider : IDataProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        return await db.Passwords.Include(x=> x.CryptKeys).Where(x => x.Id == passwordId).Select(x => new PasswordInfo
+        return await db.Passwords.Include(x => x.CryptKeys).Where(x => x.Id == passwordId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Description = x.Description,
             Title = x.Title,
             IsDeleted = x.IsDeleted,
-            URL = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue),
-            UserName = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue),
-            UserPassword = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue),
+            URL = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.PasswordId == x.Id).KeyValue),
+            UserName = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.PasswordId == x.Id).KeyValue),
+            UserPassword = EditData.Decrypt(x.URL, x.CryptKeys.FirstOrDefault(y => y.PasswordId == x.Id).KeyValue),
             CryptKey = x.CryptKeys.FirstOrDefault(y => y.Id == x.Id).KeyValue
         }).FirstOrDefaultAsync();
     }

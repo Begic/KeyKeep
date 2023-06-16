@@ -12,10 +12,11 @@
         @if (allArchivedPasswordInfos.Count != 0)
         {
             <MudDataGrid Items="@allArchivedPasswordInfos"
-                     Dense="true"
-                     Striped="true"
-                     Hover="true"
-                     Virtualize="true">
+                         RowsPerPage="10"
+                         Dense="true"
+                         Striped="true"
+                         Hover="true"
+                         Virtualize="true">
                 <Columns>
                     <PropertyColumn Title="Titel" Property="x => x.Title" />
                     <PropertyColumn Title="Beschreibung" Property="x => x.Description" />
