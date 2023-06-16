@@ -67,7 +67,7 @@
         {
             CanLogin = false;
             UserService.CurrentUser = null;
-            LoginModel = null;
+            LoginModel = new LoginInfo();
             Toaster.Add("Login fehlerhaft", MudBlazor.Severity.Error);
         }
 

@@ -1,9 +1,11 @@
-﻿using System.Security.Cryptography;
+﻿using System.ComponentModel;
+using System.Security.Cryptography;
 using KeyKeep.Data.Contracts;
 using KeyKeep.Data.Entities;
 using KeyKeep.Data.Models;
 using KeyKeep.Data.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace KeyKeep.Data.Provider;
 
@@ -20,20 +22,23 @@ public class DataProvider : IDataProvider
 
     public async Task<List<PasswordInfo>> GetPasswordsFromUser(int userId)
     {
+        //TODO so geht das nicht!
+        //    Key wird für den ersten Datensatz geholt, danach PasswordPropertyTextAttribute der nicht mehr 
+
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
-
-        var test = await db.Passwords.Include(x=> x.CryptKeys).FirstOrDefaultAsync(x => x.UserId == userId).ConfigureAwait(false);
-
-        var key = await db.Passwords.Include(x => x.CryptKeys).SelectMany(x=> x.CryptKeys).FirstOrDefaultAsync() ;
+        
+        //var key = await db.Passwords.Include(x => x.CryptKeys)
+        //    .Where(x=> x.UserId == userId)
+        //    .SelectMany(x=> x.CryptKeys).FirstOrDefaultAsync().ConfigureAwait(false);
         
         return await db.Passwords.Include(x=> x.CryptKeys).Where(x => x.UserId == userId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Title = x.Title,
             Description = x.Description,
-            URL = EditData.Decrypt(x.URL,key.KeyValue),
-            UserName = EditData.Decrypt(x.URL, key.KeyValue),
-            UserPassword = EditData.Decrypt(x.URL, key.KeyValue),
+            URL = EditData.Decrypt(x.URL,x.CryptKeys.FirstOrDefault(y=> y.PasswordId == x.Id).KeyValue),
+            UserName = EditData.Decrypt(x.UserName, x.CryptKeys.FirstOrDefault(y=> y.PasswordId == x.Id).KeyValue),
+            UserPassword = EditData.Decrypt(x.UserPassword, x.CryptKeys.FirstOrDefault(y=> y.PasswordId == x.Id).KeyValue),
             IsDeleted = x.IsDeleted
         }).ToListAsync().ConfigureAwait(false);
     }
