@@ -24,14 +24,16 @@ public class DataProvider : IDataProvider
 
         var test = await db.Passwords.Include(x=> x.CryptKeys).FirstOrDefaultAsync(x => x.UserId == userId).ConfigureAwait(false);
 
+        var key = await db.Passwords.Include(x => x.CryptKeys).SelectMany(x=> x.CryptKeys).FirstOrDefaultAsync() ;
+        
         return await db.Passwords.Include(x=> x.CryptKeys).Where(x => x.UserId == userId).Select(x => new PasswordInfo
         {
             Id = x.Id,
             Title = x.Title,
             Description = x.Description,
-            URL = EditData.Decrypt(x.URL, x.CryptKeys.First(y => y.Id == x.Id).KeyValue),
-            UserName = EditData.Decrypt(x.URL, x.CryptKeys.First(y => y.Id == x.Id).KeyValue),
-            UserPassword = EditData.Decrypt(x.URL, x.CryptKeys.First(y => y.Id == x.Id).KeyValue),
+            URL = EditData.Decrypt(x.URL,key.KeyValue),
+            UserName = EditData.Decrypt(x.URL, key.KeyValue),
+            UserPassword = EditData.Decrypt(x.URL, key.KeyValue),
             IsDeleted = x.IsDeleted
         }).ToListAsync().ConfigureAwait(false);
     }
