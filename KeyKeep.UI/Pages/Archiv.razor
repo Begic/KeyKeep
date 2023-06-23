@@ -4,6 +4,7 @@
 @inject IDialogService DialogService
 @inject ISnackbar Toaster
 @inject UserService UserService
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Archiv</PageTitle>
 
@@ -22,7 +23,13 @@
                     <PropertyColumn Title="Beschreibung" Property="x => x.Description" />
                     <PropertyColumn Title="Link" Property="x => x.URL" />
                     <PropertyColumn Title="Benutzername" Property="x => x.UserName" />
-                    <PropertyColumn Title="Passwort" Property="x => x.UserPassword" />
+                    <TemplateColumn Title="Passwort" Property="x => x.UserPassword">
+                        <CellTemplate>
+                            <MudTooltip Text="In Zwischenablage Kopieren">
+                                <MudFab Class="mt-2" Size="Size.Small" Color="Color.Dark" StartIcon="@Icons.Material.Filled.CopyAll" OnClick="() => CopyPassword(context.Item)" />
+                            </MudTooltip>
+                        </CellTemplate>
+                    </TemplateColumn>
                     <TemplateColumn>
                         <CellTemplate>
                             <MudStack Row>
@@ -114,5 +121,12 @@
 
             Toaster.Add("Erfolgreich wiederhergestellt", MudBlazor.Severity.Success);
         }
+    }
+
+    private async Task CopyPassword(PasswordInfo item)
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", item.UserPassword);
+
+        Toaster.Add("Passwort in die Zwischenablage Kopiert", Severity.Info);
     }
 }
