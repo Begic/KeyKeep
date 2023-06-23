@@ -20,6 +20,9 @@
                 <MudItem md="12">
                     <MudTextField @bind-Value="RegisterInfoToEdit.LoginPassword" For="@(() => RegisterInfoToEdit.LoginPassword)" Label="Passwort" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="OnClickShowPassword" AdornmentAriaLabel="Zeige Passwort" />
                 </MudItem>
+                <MudItem md="12">
+                    <MudTextField @bind-Value="RegisterInfoToEdit.CheckPassword" For="@(() => RegisterInfoToEdit.CheckPassword)" Label="Passwort wiederholen" Variant="Variant.Outlined" InputType="InputType.Password"/>
+                </MudItem>
             </MudGrid>
         </DialogContent>
         <DialogActions>
