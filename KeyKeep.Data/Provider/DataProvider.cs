@@ -108,7 +108,10 @@ public class DataProvider : IDataProvider
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
 
-        var toDelete = await db.Passwords.FirstOrDefaultAsync(x => x.Id == item.Id).ConfigureAwait(false);
+        var toDelete = await db.Passwords
+            .Include(x=> x.User)
+            .Include(x=> x.CryptKeys)
+            .FirstOrDefaultAsync(x => x.Id == item.Id).ConfigureAwait(false);
 
         if (toDelete != null)
         {
