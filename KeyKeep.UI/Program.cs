@@ -50,7 +50,7 @@ using (var db = scope.ServiceProvider.GetService<IDbContextFactory<DataBaseConte
                 {
                     new()
                     {
-                        Title = "Für KeeyKep",
+                        Title = "FÃ¼r KeeyKep",
                         URL = EditData.Encrypt("https://localhost:44349/", aes.Key),
                         UserName = EditData.Encrypt("admin@user.at",aes.Key),
                         UserPassword = EditData.Encrypt("admin123", aes.Key),

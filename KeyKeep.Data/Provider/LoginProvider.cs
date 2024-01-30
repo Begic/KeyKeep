@@ -17,7 +17,6 @@ public class LoginProvider : ILoginProvider
     public async Task<LoginInfo?> CheckUserForLogin(LoginInfo loginModel)
     {
         await using var db = await factory.CreateDbContextAsync().ConfigureAwait(false);
-
         foreach (var user in await db.Users.ToListAsync())
         {
             if (EditData.Decrypt(user.Email, new byte[32]) == loginModel.Email && 
